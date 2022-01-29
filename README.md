@@ -1,5 +1,5 @@
 
-# Init script for BringAut Industrial Portal
+# Init script for BringAuto Industrial Portal
 
 Script for initialization of the database of Industrial Portal.
 

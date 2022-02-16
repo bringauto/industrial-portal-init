@@ -1,4 +1,3 @@
-
 # Init script for BringAuto Fleet
 
 Script for initialization of the database of [BringAuto Fleet]

@@ -1,13 +1,13 @@
 
-# Init script for BringAut Industrial Portal
+# Init script for BringAuto Fleet
 
-Script for initialization of the database of Industrial Portal.
+Script for initialization of the database of [BringAuto Fleet]
 
 ## Usage
 
 Prerequisites:
 
-- The Industrial Portal must be deployed and works
+- The [BringAuto Fleet] must be deployed and works
 
 !!! **script will delete all entries in the database!** !!!
 
@@ -21,3 +21,6 @@ Usage:
 - run `python3 main.py` --> Script will delete the content of the database and fill up data from config script
 
 As a main config file the config.json is used.
+
+
+[BringAuto Fleet]: https://github.com/bringauto/fleet

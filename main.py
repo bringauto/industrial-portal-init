@@ -2,15 +2,15 @@
 
 import json
 
-from fleet.query.Login import get_login_cookie, ENDPOINT
-from fleet.query.Utils import delete_all
-from fleet.query.Car import CarAdder
-from fleet.query.User import UserAdder
-from fleet.query.Station import StationAdder
-from fleet.query.Route import RouteAdder
-from fleet.query.Order import OrderAdder
-from fleet.data.Cookie import Cookie
-from fleet.data.Stop import Stop
+from fleet.query.login import get_login_cookie, ENDPOINT
+from fleet.query.utils import delete_all
+from fleet.query.car import CarAdder
+from fleet.query.user import UserAdder
+from fleet.query.station import StationAdder
+from fleet.query.route import RouteAdder
+from fleet.query.order import OrderAdder
+from fleet.data.cookie import Cookie
+from fleet.data.stop import Stop
 
 
 def run_queries(json_config_path: str, endpoint: str, login_cookie: Cookie) -> None:

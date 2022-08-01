@@ -1,8 +1,8 @@
 from string import Template
 
-from fleet.query.Query import Query
-from fleet.query.Station import StationInfoGetter
-from fleet.data.Cookie import Cookie
+from fleet.query.query import Query
+from fleet.query.station import StationInfoGetter
+from fleet.data.cookie import Cookie
 
 
 class RouteAdder(Query):

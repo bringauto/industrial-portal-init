@@ -2,7 +2,7 @@ import json
 import requests
 from abc import ABC, abstractmethod
 
-from fleet.data.Cookie import Cookie
+from fleet.data.cookie import Cookie
 
 
 class Query(ABC):

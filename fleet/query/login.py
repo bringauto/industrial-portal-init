@@ -1,7 +1,7 @@
 from string import Template
 
-from .Query import Query
-from ..data.Cookie import Cookie
+from .query import Query
+from ..data.cookie import Cookie
 
 
 LOGIN_USERNAME = "Admin"

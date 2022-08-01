@@ -1,7 +1,7 @@
 from string import Template
 
-from fleet.query.Query import Query
-from fleet.data.Cookie import Cookie
+from fleet.query.query import Query
+from fleet.data.cookie import Cookie
 
 
 class StationAdder(Query):

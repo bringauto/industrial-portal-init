@@ -1,9 +1,9 @@
-from fleet.query.Query import Query
-from fleet.query.Car import CarDeleter
-from fleet.query.User import UserDeleter
-from fleet.query.Station import StationDeleter
-from fleet.query.Route import RouteDeleter
-from fleet.data.Cookie import Cookie
+from fleet.query.query import Query
+from fleet.query.car import CarDeleter
+from fleet.query.user import UserDeleter
+from fleet.query.station import StationDeleter
+from fleet.query.route import RouteDeleter
+from fleet.data.cookie import Cookie
 
 
 class AllIdGetter(Query):

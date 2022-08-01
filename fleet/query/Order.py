@@ -20,17 +20,20 @@ class OrderAdder(Query):
         self.arrive = arrive
         self.from_station_phone = from_station_phone
         self.to_station_phone = to_station_phone
+
         car_info_getter = CarInfoGetter(
             self.endpoint, self.login_cookie, car_name)
         self.car_id = car_info_getter.get_id_from_json(car_info_getter.exec())
-        station_info_getter = StationInfoGetter(
+
+        station_from_info_getter = StationInfoGetter(
             self.endpoint, self.login_cookie, from_station_name)
-        self.from_station_id = station_info_getter.get_id_from_json(
-            station_info_getter.exec())
-        station_info_getter = StationInfoGetter(
+        self.from_station_id = station_from_info_getter.get_id_from_json(
+            station_from_info_getter.exec())
+
+        station_to_info_getter = StationInfoGetter(
             self.endpoint, self.login_cookie, to_station_name)
-        self.to_station_id = station_info_getter.get_id_from_json(
-            station_info_getter.exec())
+        self.to_station_id = station_to_info_getter.get_id_from_json(
+            station_to_info_getter.exec())
 
     def get_query(self) -> str:
         return Template("""

@@ -1,6 +1,5 @@
 from string import Template
 
-
 from fleet.query.Query import Query
 from fleet.data.Cookie import Cookie
 

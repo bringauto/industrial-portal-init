@@ -1,6 +1,5 @@
 from string import Template
 
-
 from fleet.query.Query import Query
 from fleet.query.Station import StationInfoGetter
 from fleet.data.Cookie import Cookie
@@ -15,8 +14,7 @@ class RouteAdder(Query):
 
     def get_query(self) -> str:
         stops_query_part = ""
-        i = 0
-        for stop in self.stops:  # creates string of stops in GraphQL format. Example:
+        for i, stop in enumerate(self.stops):  # creates string of stops in GraphQL format. Example:
             # {latitude: 2.68, longitude: 5.3, $order: 1}, ...
             station_query_part = "station: null"
             if stop.station_name is not None:
@@ -36,7 +34,6 @@ class RouteAdder(Query):
             )
             if i < (len(self.stops) - 1):
                 stops_query_part += ","  # comma between except last stop
-            i += 1
         return Template("""
                     mutation M{
                       RouteMutation{addRoute(route : {name: "$name", color: "$color", stops: [

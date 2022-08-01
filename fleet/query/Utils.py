@@ -1,4 +1,3 @@
-
 from fleet.query.Query import Query
 from fleet.query.Car import CarDeleter
 from fleet.query.User import UserDeleter

@@ -55,10 +55,10 @@
   ],
   "users": [
     {
-        "email": "admin@bringauto.com",
-        "username": "Admin",
-        "password": "Admin1",
-        "role": "admin"
+        "email": "user@bringauto.com",
+        "username": "User",
+        "password": "User1",
+        "role": "user"
       }
   ],
   "routes": [

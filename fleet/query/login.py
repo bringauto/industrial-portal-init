@@ -1,7 +1,7 @@
 from string import Template
 
-from .query import Query
-from ..data.cookie import Cookie
+from fleet.query.query import Query
+from fleet.data.cookie import Cookie
 
 
 LOGIN_USERNAME = "Admin"

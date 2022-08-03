@@ -18,6 +18,7 @@ def login_query(username: str, password: str) -> str:
         login(login: {password: "$password", userName: "$username"}) {
           email
           roles
+          tenants{nodes{id}}
         }
         }
     }
@@ -31,5 +32,6 @@ def get_login_cookie(endpoint: str) -> Cookie:
     query = login_query(LOGIN_USERNAME, LOGIN_PASSWORD)
     response = Query.call_query(query, headers, endpoint)
     all_cookies = response.cookies.get_dict()
+    Query.tenant_id = str(response.json()["data"]["UserQuery"]["login"]["tenants"]["nodes"][0]["id"])
     login_cookie = Cookie(COOKIE_KEY, all_cookies[COOKIE_KEY])
     return login_cookie

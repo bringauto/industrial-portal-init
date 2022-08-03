@@ -64,6 +64,6 @@ def delete_all(endpoint: str, login_cookie: Cookie) -> None:
         RouteDeleter(route_node["id"], endpoint, login_cookie).exec()
     for station_node in all_ids_json["data"]["StationQuery"]["stations"]["nodes"]:
         StationDeleter(station_node["id"], endpoint, login_cookie).exec()
-    for user_node in all_ids_json["data"]["UserQuery"]["all"]["nodes"]:
-        if user_node["userName"] != "Admin":
-            UserDeleter(user_node, endpoint, login_cookie).exec()
+    #for user_node in all_ids_json["data"]["UserQuery"]["all"]["nodes"]:
+    #    if user_node["userName"] != "Admin":
+    #        UserDeleter(user_node, endpoint, login_cookie).exec()

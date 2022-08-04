@@ -1,4 +1,13 @@
 {
+  "tenant": "London",
+  "users": [
+    {
+        "email": "super@bringauto.com",
+        "username": "Super",
+        "password": "Admin1",
+        "role": "Admin"
+    }
+  ],
   "cars": [
     {
       "name": "BringAuto Virtual",
@@ -52,14 +61,6 @@
       "latitude": 51.50031457906,
       "longitude": -0.11135928467
     }
-  ],
-  "users": [
-    {
-        "email": "user@bringauto.com",
-        "username": "User",
-        "password": "User1",
-        "role": "user"
-      }
   ],
   "routes": [
     {

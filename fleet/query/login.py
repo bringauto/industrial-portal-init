@@ -18,7 +18,7 @@ def login_query(username: str, password: str) -> str:
         login(login: {password: "$password", userName: "$username"}) {
           email
           roles
-          tenants{nodes{id}}
+          tenants{nodes{id name}}
         }
         }
     }
@@ -26,12 +26,11 @@ def login_query(username: str, password: str) -> str:
     return text_template.safe_substitute({'password': password, 'username': username})
 
 
-def get_login_cookie(endpoint: str) -> Cookie:
+def get_login_cookie(endpoint: str, username: str = LOGIN_USERNAME, password: str = LOGIN_PASSWORD) -> Cookie:
     """Logins to portal, which will response with cookie and function extracts it and returns it"""
     headers = {}
-    query = login_query(LOGIN_USERNAME, LOGIN_PASSWORD)
+    query = login_query(username, password)
     response = Query.call_query(query, headers, endpoint)
     all_cookies = response.cookies.get_dict()
-    Query.tenant_id = str(response.json()["data"]["UserQuery"]["login"]["tenants"]["nodes"][0]["id"])
     login_cookie = Cookie(COOKIE_KEY, all_cookies[COOKIE_KEY])
     return login_cookie

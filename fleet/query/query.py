@@ -7,16 +7,20 @@ from fleet.data.cookie import Cookie
 
 class Query(ABC):
     """Parent class for queries that add entities to portal."""
-    tenant_id = "0"
+    tenant_id = "-1"
 
     def __init__(self, endpoint: str, login_cookie: Cookie) -> None:
         self.endpoint = endpoint
         self.login_cookie = login_cookie
 
     def exec(self) -> dict:
-        headers = {
-            "Cookie": f"{self.login_cookie.get_key()}={self.login_cookie.get_value()}",
-            "tenant": Query.tenant_id}
+        if self.tenant_id == "-1":
+            headers = {
+                "Cookie": f"{self.login_cookie.get_key()}={self.login_cookie.get_value()}"}
+        else:
+            headers = {
+                "Cookie": f"{self.login_cookie.get_key()}={self.login_cookie.get_value()}",
+                "tenant": self.tenant_id}
         response = self.call_query(self.get_query(), headers, self.endpoint)
         if "errors" in response.json():
             raise Exception("Query problem: " + json.dumps(response.json()))

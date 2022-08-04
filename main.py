@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 import json
+import argparse
 
 from fleet.query.login import get_login_cookie, ENDPOINT
 from fleet.query.utils import delete_all
+from fleet.query.query import Query
 from fleet.query.car import CarAdder
-from fleet.query.user import UserAdder
+from fleet.query.user import UserAdder, UserInfoAboutMe
 from fleet.query.station import StationAdder
 from fleet.query.route import RouteAdder
 from fleet.query.order import OrderAdder
@@ -13,15 +15,26 @@ from fleet.data.cookie import Cookie
 from fleet.data.stop import Stop
 
 
+def argument_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', type=str, help='Input file', required=True)
+    return parser.parse_args()
+
 def run_queries(json_config_path: str, endpoint: str, login_cookie: Cookie) -> None:
     with open(json_config_path, "r", encoding='utf-8') as json_file:
         json_config = json.load(json_file)
+    if (len(json_config["users"]) > 1):
+        raise Exception("Only one user is allowed")
+    for user in json_config["users"]:
+        UserAdder(endpoint, login_cookie, user["email"], user["username"],
+                  user["password"], user["role"], json_config["tenant"]).exec()
+    login_cookie = get_login_cookie(ENDPOINT, json_config["users"][0]["username"], json_config["users"][0]["password"])
+    user_info = UserInfoAboutMe(endpoint, login_cookie).exec()
+    Query.tenant_id = str(user_info["data"]["UserQuery"]["me"]["tenants"]["nodes"][0]["id"])
+    delete_all(ENDPOINT, login_cookie)
     for station in json_config["stations"]:
         StationAdder(endpoint, login_cookie, station["name"], station["latitude"], station["longitude"],
                      station["contactPhone"]).exec()
-    for user in json_config["users"]:
-        UserAdder(endpoint, login_cookie, user["email"], user["username"],
-                  user["password"], user["role"]).exec()
     for route in json_config["routes"]:
         stops_js = route["stops"]
         stops = list()
@@ -45,9 +58,9 @@ def run_queries(json_config_path: str, endpoint: str, login_cookie: Cookie) -> N
 
 def main() -> None:
     try:
+        args = argument_parser()
         login_cookie = get_login_cookie(ENDPOINT)
-        delete_all(ENDPOINT, login_cookie)
-        run_queries("config.json", ENDPOINT, login_cookie)
+        run_queries(args.i, ENDPOINT, login_cookie)
     except Exception as exception:
         print(exception)
     else:

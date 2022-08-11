@@ -37,6 +37,10 @@ class Query(ABC):
         else:
             raise Exception(f"Query failed {response.status_code}")
 
+    @staticmethod
+    def reset_tenant():
+        Query.tenant_id = "-1"
+
     @abstractmethod
     def get_query(self) -> str:
         """This is implemented in each child class - creates query for each case (adding Car, User, ...)"""

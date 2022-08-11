@@ -2,6 +2,7 @@
 
 import json
 import argparse
+import glob
 
 from fleet.query.login import get_login_cookie, ENDPOINT
 from fleet.query.utils import delete_all
@@ -17,8 +18,9 @@ from fleet.data.stop import Stop
 
 def argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', type=str, help='Input file', required=True)
+    parser.add_argument('-d', '--directory', type=str, help='Directory with input files', default='config/*')
     return parser.parse_args()
+
 
 def run_queries(json_config_path: str, endpoint: str, login_cookie: Cookie) -> None:
     with open(json_config_path, "r", encoding='utf-8') as json_file:
@@ -57,14 +59,16 @@ def run_queries(json_config_path: str, endpoint: str, login_cookie: Cookie) -> N
 
 
 def main() -> None:
-    try:
-        args = argument_parser()
-        login_cookie = get_login_cookie(ENDPOINT)
-        run_queries(args.i, ENDPOINT, login_cookie)
-    except Exception as exception:
-        print(exception)
-    else:
-        print('Fleet database updated')
+    args = argument_parser()
+    for config in glob.iglob(args.directory):
+        Query.reset_tenant()
+        try:
+            login_cookie = get_login_cookie(ENDPOINT)
+            run_queries(config, ENDPOINT, login_cookie)
+        except Exception as exception:
+            print(exception)
+        else:
+            print('Fleet database updated')
 
 
 if __name__ == '__main__':

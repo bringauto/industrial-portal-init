@@ -67,8 +67,7 @@ def main() -> None:
             run_queries(config, ENDPOINT, login_cookie)
         except Exception as exception:
             print(exception)
-        else:
-            print('Fleet database updated')
+    print('Fleet database updated')
 
 
 if __name__ == '__main__':

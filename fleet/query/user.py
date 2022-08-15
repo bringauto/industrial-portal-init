@@ -41,22 +41,21 @@ class UserAdder(Query):
 
 
 class UserDeleter(Query):
-    def __init__(self, endpoint: str, login_cookie: Cookie, user: dict) -> None:
+    def __init__(self, endpoint: str, login_cookie: Cookie, userName: str) -> None:
         super().__init__(endpoint, login_cookie)
-        self.user = user
+        self.userName = userName
 
     def get_query(self) -> str:
         return Template("""
             mutation DeleteUser{
               UserMutation{
-                delete(user: {email: "$email", userName: "$userName", roles: "$roles"}){
+                delete(user: {userName: "$userName"}){
                   succeeded
                   errors {description}
                 }
               }
             }
-        """).safe_substitute({'email': self.user["email"], 'userName': self.user["userName"],
-                              'roles': self.user["roles"]})
+        """).safe_substitute({'userName': self.userName})
 
     def handle_json_response(self, json_response: dict) -> None:
         pass

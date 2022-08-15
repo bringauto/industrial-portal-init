@@ -4,7 +4,7 @@ from fleet.query.query import Query
 from fleet.data.cookie import Cookie
 
 
-class StationAdder(Query):
+class StopAdder(Query):
     def __init__(self, endpoint: str, login_cookie: Cookie, name: str,
                  latitude: float, longitude: float, contact_phone: str) -> None:
         super().__init__(endpoint, login_cookie)
@@ -16,7 +16,7 @@ class StationAdder(Query):
     def get_query(self):
         return Template("""
                 mutation Q{
-                  StationMutation{addStation(station: {name: "$name", latitude: $latitude, longitude: $longitude,
+                  StopMutation{addStop(station: {name: "$name", latitude: $latitude, longitude: $longitude,
                                 contactPhone: "$contactPhone"}){
                     id
                   }
@@ -25,11 +25,11 @@ class StationAdder(Query):
             """).safe_substitute({'name': self.name, 'latitude': self.latitude, 'longitude': self.longitude,
                                   'contactPhone': self.contact_phone})
 
-    def handle_json_response(self, json_response):
+    def handle_json_response(self, json_response: dict):
         pass
 
 
-class StationInfoGetter(Query):
+class StopInfoGetter(Query):
     """Call parent exec() function and then pass result to function get_id_from_json() to get id"""
 
     def __init__(self, endpoint: str, login_cookie: Cookie, station_name: str) -> None:
@@ -39,8 +39,8 @@ class StationInfoGetter(Query):
     def get_query(self) -> str:
         return Template("""
             query Q{
-              StationQuery{
-                stations(where: {name:"$name"}){
+              StopQuery{
+                stop(where: {name:"$name"}){
                   nodes{id name}
                 }
               }
@@ -52,7 +52,7 @@ class StationInfoGetter(Query):
 
     def get_id_from_json(self, json_response: dict) -> int:
         """Extracts id from json response"""
-        stations = json_response["data"]["StationQuery"]["stations"]["nodes"]
+        stations = json_response["data"]["StopQuery"]["stop"]["nodes"]
         if len(stations) == 0:
             raise Exception(
                 f"Station with name {self.station_name} doesn't exists!")
@@ -62,16 +62,16 @@ class StationInfoGetter(Query):
         return stations[0]["id"]
 
 
-class StationDeleter(Query):
+class StopDeleter(Query):
     def __init__(self, station_id: int, endpoint: str, login_cookie: Cookie) -> None:
         super().__init__(endpoint, login_cookie)
         self.station_id = station_id
 
     def get_query(self) -> str:
         return Template("""
-            mutation DeleteStation{
-              StationMutation{
-                deleteStation(stationId: $stationId){
+            mutation DeleteStop{
+              StopMutation{
+                deleteStop(stationId: $stationId){
                   id
                 }
               }

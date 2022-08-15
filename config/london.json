@@ -18,7 +18,7 @@
     }
   ],
   "orders": [],
-  "stations": [
+  "stops": [
     {
       "name": "London Waterloo",
       "contactPhone": "123",

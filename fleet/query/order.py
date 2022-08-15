@@ -2,7 +2,7 @@ from string import Template
 
 from fleet.query.query import Query
 from fleet.query.car import CarInfoGetter
-from fleet.query.station import StationInfoGetter
+from fleet.query.stop import StopInfoGetter
 from fleet.data.cookie import Cookie
 
 
@@ -25,12 +25,12 @@ class OrderAdder(Query):
             self.endpoint, self.login_cookie, car_name)
         self.car_id = car_info_getter.get_id_from_json(car_info_getter.exec())
 
-        station_from_info_getter = StationInfoGetter(
+        station_from_info_getter = StopInfoGetter(
             self.endpoint, self.login_cookie, from_station_name)
         self.from_station_id = station_from_info_getter.get_id_from_json(
             station_from_info_getter.exec())
 
-        station_to_info_getter = StationInfoGetter(
+        station_to_info_getter = StopInfoGetter(
             self.endpoint, self.login_cookie, to_station_name)
         self.to_station_id = station_to_info_getter.get_id_from_json(
             station_to_info_getter.exec())

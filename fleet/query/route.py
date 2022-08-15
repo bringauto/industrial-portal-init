@@ -1,7 +1,7 @@
 from string import Template
 
 from fleet.query.query import Query
-from fleet.query.station import StationInfoGetter
+from fleet.query.stop import StopInfoGetter
 from fleet.data.cookie import Cookie
 
 
@@ -18,7 +18,7 @@ class RouteAdder(Query):
             # {latitude: 2.68, longitude: 5.3, $order: 1}, ...
             station_query_part = "station: null"
             if stop.station_name is not None:
-                station_info = StationInfoGetter(
+                station_info = StopInfoGetter(
                     self.endpoint, self.login_cookie, stop.station_name)
                 station_id = station_info.get_id_from_json(station_info.exec())
                 station_query_part = Template("station: { id: $station_id }").safe_substitute({

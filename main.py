@@ -4,27 +4,20 @@ import json
 import argparse
 import glob
 
-from fleet.query.login import get_login_cookie, ENDPOINT, LOGIN_USERNAME, LOGIN_PASSWORD
-from fleet.query.utils import delete_all, delete_users
-from fleet.query.query import Query
+from fleet.query.login import get_login_cookie, ENDPOINT
+from fleet.query.utils import delete_all, delete_users, set_tenant, reset_tenant
 from fleet.query.car import CarAdder
-from fleet.query.user import UserAdder, UserInfoAboutMe
+from fleet.query.user import UserAdder
 from fleet.query.stop import StopAdder
 from fleet.query.route import RouteAdder
 from fleet.query.order import OrderAdder
 from fleet.data.stop import Stop
 
 
-def argument_parser():
+def argument_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--directory', type=str, help='Directory with input files', default='config/*')
     return parser.parse_args()
-
-
-def set_tenant(username: str = LOGIN_USERNAME, password: str = LOGIN_PASSWORD):
-        login_cookie = get_login_cookie(ENDPOINT, username, password)
-        user_info = UserInfoAboutMe(ENDPOINT, login_cookie).exec()
-        Query.tenant_id = str(user_info["data"]["UserQuery"]["me"]["tenants"]["nodes"][0]["id"])
 
 
 def run_queries(json_config_path: str) -> None:
@@ -33,22 +26,18 @@ def run_queries(json_config_path: str) -> None:
     if (len(json_config["users"]) > 1):
         raise Exception("Only one user is allowed")
 
-    #login_cookie = get_login_cookie(ENDPOINT)
-    #user_info = UserInfoAboutMe(ENDPOINT, login_cookie).exec()
-    #Query.tenant_id = str(user_info["data"]["UserQuery"]["me"]["tenants"]["nodes"][0]["id"])
-    set_tenant()
-    #for user in json_config["users"]:
-    #    UserAdder(endpoint, login_cookie, user["email"], user["username"],
-    #             user["password"], user["role"], json_config["tenant"]).exec()
-    Query.reset_tenant()
+    login_cookie = get_login_cookie(ENDPOINT)
+    set_tenant(login_cookie)
+    for user in json_config["users"]:
+        UserAdder(ENDPOINT, login_cookie, user["email"], user["username"],
+                  user["password"], user["role"], json_config["tenant"]).exec()
+    reset_tenant()
     login_cookie = get_login_cookie(ENDPOINT, json_config["users"][0]["username"], json_config["users"][0]["password"])
-    #user_info = UserInfoAboutMe(ENDPOINT, login_cookie).exec()
-    #Query.tenant_id = str(user_info["data"]["UserQuery"]["me"]["tenants"]["nodes"][0]["id"])
-    set_tenant(json_config["users"][0]["username"], json_config["users"][0]["password"])
+    set_tenant(login_cookie)
     delete_all(ENDPOINT, login_cookie)
     for stop in json_config["stops"]:
         StopAdder(ENDPOINT, login_cookie, stop["name"], stop["latitude"], stop["longitude"],
-                     stop["contactPhone"]).exec()
+                  stop["contactPhone"]).exec()
     for route in json_config["routes"]:
         stops_js = route["stops"]
         stops = list()
@@ -73,12 +62,12 @@ def run_queries(json_config_path: str) -> None:
 def main() -> None:
     args = argument_parser()
     login_cookie = get_login_cookie(ENDPOINT)
-    #delete_users(ENDPOINT, login_cookie)
+    delete_users(ENDPOINT, login_cookie)
     for config in glob.iglob(args.directory):
-        #try:
-        run_queries(config)
-        #except Exception as exception:
-        #    print(exception)
+        try:
+            run_queries(config)
+        except Exception as exception:
+            print(exception)
     print('Fleet database updated')
 
 

@@ -20,7 +20,7 @@ class AllIdGetter(Query):
                     }
                   }
                   StopQuery{
-                    stop{
+                    stops{
                       nodes{
                         id
                       }
@@ -62,7 +62,7 @@ def delete_all(endpoint: str, login_cookie: Cookie) -> None:
         CarDeleter(car_node["id"], endpoint, login_cookie).exec()
     for route_node in all_ids_json["data"]["RouteQuery"]["routes"]["nodes"]:
         RouteDeleter(route_node["id"], endpoint, login_cookie).exec()
-    for station_node in all_ids_json["data"]["StopQuery"]["stop"]["nodes"]:
+    for station_node in all_ids_json["data"]["StopQuery"]["stops"]["nodes"]:
         StopDeleter(station_node["id"], endpoint, login_cookie).exec()
 
 

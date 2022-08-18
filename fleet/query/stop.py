@@ -40,7 +40,7 @@ class StopInfoGetter(Query):
         return Template("""
             query Q{
               StopQuery{
-                stop(where: {name:"$name"}){
+                stops(where: {name:"$name"}){
                   nodes{id name}
                 }
               }
@@ -52,7 +52,7 @@ class StopInfoGetter(Query):
 
     def get_id_from_json(self, json_response: dict) -> int:
         """Extracts id from json response"""
-        stations = json_response["data"]["StopQuery"]["stop"]["nodes"]
+        stations = json_response["data"]["StopQuery"]["stops"]["nodes"]
         if len(stations) == 0:
             raise Exception(
                 f"Station with name {self.station_name} doesn't exists!")

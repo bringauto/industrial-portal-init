@@ -7,9 +7,9 @@
     },
     "users": [
         {
-            "email": "superdriver@bringauto.com",
-            "username": "SuperDriver",
-            "password": "Admin1",
+            "email": "driver@bringauto.com",
+            "username": "Driver",
+            "password": "Driver1",
             "role": "Driver"
         },
         {
@@ -17,6 +17,12 @@
             "username": "SuperPriv",
             "password": "Admin1",
             "role": "Privileged"
+        },
+        {
+            "email": "user@bringauto.com",
+            "username": "User",
+            "password": "User1",
+            "role": "User"
         }
     ],
     "cars": [

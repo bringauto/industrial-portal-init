@@ -6,12 +6,12 @@ from fleet.data.cookie import Cookie
 
 
 class CarAdder(Query):
-    def __init__(self, endpoint: str, login_cookie: Cookie, name: str, hw_id: str, comapanyName: str,
+    def __init__(self, endpoint: str, login_cookie: Cookie, name: str, hw_id: str, companyName: str,
                  carAdminPhone: str, underTest: bool) -> None:
         super().__init__(endpoint, login_cookie)
         self.name = name
         self.hw_id = hw_id
-        self.companyName = comapanyName
+        self.companyName = companyName
         self.adminPhone = carAdminPhone
         self.underTest = underTest
 

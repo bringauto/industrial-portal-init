@@ -22,7 +22,6 @@
     "cars": [
         {
             "name": "BringAuto Virtual",
-            "companyName": "bringauto",
             "adminPhone": "+123",
             "underTest": false,
             "hwId": ""

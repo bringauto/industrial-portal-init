@@ -60,7 +60,7 @@ def run_queries(json_config_path: str) -> None:
                    route["name"], route["color"], stops).exec()
 
     for car in json_config["cars"]:
-        CarAdder(ENDPOINT, login_cookie, car["name"], car["hwId"], car["companyName"],
+        CarAdder(ENDPOINT, login_cookie, car["name"], car["hwId"], json_config["tenant"],
                  car["adminPhone"], car["underTest"]).exec()
 
     for order in json_config["orders"]:

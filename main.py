@@ -3,6 +3,7 @@
 import json
 import argparse
 import glob
+import os
 
 from fleet.query.login import get_login_cookie, ENDPOINT
 from fleet.query.utils import delete_all, delete_users, set_tenant, reset_tenant
@@ -17,7 +18,7 @@ from fleet.data.stop import Stop
 
 def argument_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--directory', type=str, help='Directory with input files', default='config/*')
+    parser.add_argument('-d', '--directory', type=str, help='Directory with input files, default is config/', default='config/')
     return parser.parse_args()
 
 
@@ -74,7 +75,8 @@ def main() -> None:
     args = argument_parser()
     login_cookie = get_login_cookie(ENDPOINT)
     delete_users(ENDPOINT, login_cookie)
-    for config in glob.iglob(args.directory):
+    args.directory = os.path.join(args.directory, '')
+    for config in glob.iglob(f'{args.directory}*'):
         try:
             run_queries(config)
         except Exception as exception:

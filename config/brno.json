@@ -1,0 +1,74 @@
+{
+    "tenant": "bringauto",
+    "admin": {
+        "email": "brno@bringauto.com",
+        "username": "Brno",
+        "password": "Admin1"
+    },
+    "users": [
+        {
+            "email": "brnodriver@bringauto.com",
+            "username": "BrnoDriver",
+            "password": "Admin1",
+            "role": "Driver"
+        },
+        {
+            "email": "brnopriv@bringauto.com",
+            "username": "BrnoPriv",
+            "password": "Admin1",
+            "role": "Privileged"
+        }
+    ],
+    "cars": [
+        {
+            "name": "BringAuto Virtual",
+            "adminPhone": "+123",
+            "underTest": false,
+            "hwId": ""
+        }
+    ],
+    "orders": [],
+    "stops": [
+        {
+            "name": "Vsetínská",
+            "contactPhone": "123",
+            "latitude": 49.179496,
+            "longitude": 16.597905
+        },
+        {
+            "name": "Vojtova",
+            "contactPhone": "123",
+            "latitude": 49.182392,
+            "longitude": 16.600491
+        },
+        {
+            "name": "Křídlovická",
+            "contactPhone": "123",
+            "latitude": 49.184748,
+            "longitude": 16.602798
+        }
+    ],
+    "routes": [
+        {
+            "name": "Brno",
+            "color": "#208BF0",
+            "stops": [
+                {
+                    "latitude": 49.179496,
+                    "longitude": 16.597905,
+                    "stationName": "Vsetínská"
+                },
+                {
+                    "latitude": 49.182392,
+                    "longitude": 16.600491,
+                    "stationName": "Vojtova"
+                },
+                {
+                    "latitude": 49.184748,
+                    "longitude": 16.602798,
+                    "stationName": "Křídlovická"
+                }
+            ]
+        }
+    ]
+}

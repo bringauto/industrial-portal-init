@@ -25,6 +25,7 @@ def run_queries(json_config_path: str) -> None:
     with open(json_config_path, "r", encoding='utf-8') as json_file:
         json_config = json.load(json_file)
 
+    reset_tenant()
     login_cookie = get_login_cookie(ENDPOINT)
     set_tenant(login_cookie)
     AdminAdder(ENDPOINT, login_cookie, json_config["admin"]["email"], json_config["admin"]["username"],

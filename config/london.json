@@ -1252,7 +1252,7 @@
         },
         {
             "name": "Short",
-            "color": "#03BBF1",
+            "color": "#6203FC",
             "stops": [
                 {
                     "latitude": 51.50406792234,
@@ -1291,7 +1291,7 @@
                 },
                 {
                     "latitude": 51.50468231824,
-                    "longitude": -0.11410118222,        ------- zacatek
+                    "longitude": -0.11410118222,
                     "stationName": null
                 },
                 {
@@ -2071,7 +2071,7 @@
                 },
                 {
                     "latitude": 51.50067523596,
-                    "longitude": -0.1162254864, --------------------- TADY
+                    "longitude": -0.1162254864,
                     "stationName": null
                 },
                 {

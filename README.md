@@ -14,7 +14,7 @@ If you do not want to delete database content comment out `delete_all` function 
 
 Usage:
 
-- Install requirements by `pip3 install -r requirements`
+- Install requirements by `pip3 install -r requirements.txt`
 - Edit endpoint and login info in main.py script
 - Edit config.json script
 - run `python3 main.py` --> Script will delete the content of the database and fill up data from config script

@@ -1249,11 +1249,6 @@
             "color": "#6203FC",
             "stops": [
                 {
-                    "latitude": 51.50406792234,
-                    "longitude": -0.11214853406,
-                    "stationName": "London Waterloo"
-                },
-                {
                     "latitude": 51.50408795712,
                     "longitude": -0.11243016601,
                     "stationName": "London National Theatre"
@@ -1277,11 +1272,6 @@
                     "latitude": 51.50442353336,
                     "longitude": -0.11379272014,
                     "stationName": "Whitehall Garden"
-                },
-                {
-                    "latitude": 51.5044936545,
-                    "longitude": -0.11391341954,
-                    "stationName": "Oasis Academy"
                 },
                 {
                     "latitude": 51.50468231824,

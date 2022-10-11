@@ -1,4 +1,5 @@
 import json
+from typing import Any
 import requests
 from abc import ABC, abstractmethod
 
@@ -13,7 +14,7 @@ class Query(ABC):
         self.endpoint = endpoint
         self.login_cookie = login_cookie
 
-    def exec(self) -> dict:
+    def exec(self) -> Any:
         if self.tenant_id == "-1":
             headers = {
                 "Cookie": f"{self.login_cookie.get_key()}={self.login_cookie.get_value()}"}
@@ -43,7 +44,7 @@ class Query(ABC):
         pass
 
     @abstractmethod
-    def handle_json_response(self, json_response: dict):
+    def handle_json_response(self, json_response: dict) -> None:
         """If user sends bad data in query to server, he will get error response, but responses differ, so has to be
         implemented for different cases"""
         pass

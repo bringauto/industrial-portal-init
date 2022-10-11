@@ -1,4 +1,5 @@
 from string import Template
+from typing import Any
 
 from fleet.query.query import Query
 from fleet.query.route import RoutesInfoGetter
@@ -66,7 +67,7 @@ class CarInfoGetter(Query):
     def handle_json_response(self, json_response: dict) -> None:
         pass
 
-    def get_id_from_json(self, json_response: dict) -> int:
+    def get_id_from_json(self, json_response: dict) -> Any:
         """Extracts id from json response"""
         cars = json_response["data"]["CarQuery"]["cars"]["nodes"]
         if len(cars) == 0:

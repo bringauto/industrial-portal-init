@@ -5,20 +5,21 @@ import argparse
 import glob
 import os
 
-from fleet.query.login import get_login_cookie, ENDPOINT
-from fleet.query.utils import delete_all, delete_users, set_tenant, reset_tenant
-from fleet.query.admin import AdminAdder
-from fleet.query.car import CarAdder
-from fleet.query.user import UserAdder
-from fleet.query.stop import StopAdder
-from fleet.query.route import RouteAdder
-from fleet.query.order import OrderAdder
-from fleet.data.stop import Stop
+from fleet import get_login_cookie, ENDPOINT
+from fleet import delete_all, delete_users, set_tenant, reset_tenant
+from fleet import AdminAdder
+from fleet import CarAdder
+from fleet import UserAdder
+from fleet import StopAdder
+from fleet import RouteAdder
+from fleet import OrderAdder
+from fleet import Stop
 
 
 def argument_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--directory', type=str, help='Directory with input files, default is config/', default='config/')
+    parser.add_argument('-d', '--directory', type=str,
+                        help='Directory with input files, default is config/', default='config/')
     return parser.parse_args()
 
 

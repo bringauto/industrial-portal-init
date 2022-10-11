@@ -92,10 +92,10 @@ def delete_users(endpoint: str, login_cookie: Cookie) -> None:
             UserDeleter(endpoint, login_cookie, user_node["userName"]).exec()
 
 
-def set_tenant(cookie: Cookie):
+def set_tenant(cookie: Cookie) -> None:
     user_info = UserInfoAboutMe(ENDPOINT, cookie).exec()
     Query.tenant_id = str(user_info["data"]["UserQuery"]["me"]["tenants"]["nodes"][0]["id"])
 
 
-def reset_tenant():
+def reset_tenant() -> None:
     Query.tenant_id = "-1"

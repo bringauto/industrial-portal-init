@@ -17,10 +17,10 @@ class Query(ABC):
     def exec(self) -> Any:
         if self.tenant_id == "-1":
             headers = {
-                "Cookie": f"{self.login_cookie.get_key()}={self.login_cookie.get_value()}"}
+                "Cookie": f"{self.login_cookie.key}={self.login_cookie.value}"}
         else:
             headers = {
-                "Cookie": f"{self.login_cookie.get_key()}={self.login_cookie.get_value()}",
+                "Cookie": f"{self.login_cookie.key}={self.login_cookie.value}",
                 "tenant": self.tenant_id}
         response = self.call_query(self.get_query(), headers, self.endpoint)
         if "errors" in response.json():

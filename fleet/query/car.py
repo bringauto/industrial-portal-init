@@ -14,7 +14,7 @@ class CarAdder(Query):
         self.hw_id = hw_id
         self.companyName = companyName
         self.adminPhone = carAdminPhone
-        self.underTest = underTest
+        self.underTest = 'true' if underTest else 'false'
 
     def get_query(self) -> str:
         routes = RoutesInfoGetter(
@@ -24,7 +24,7 @@ class CarAdder(Query):
             mutation M{
               CarMutation{
               addCar(car : {name : "$name", hwId : "$hwId", companyName: "$companyName",
-                underTest: true, carAdminPhone: "$adminPhone", routeId: $routeId
+                underTest: $underTest, carAdminPhone: "$adminPhone", routeId: $routeId
                }){
                 id
                 name

@@ -66,7 +66,7 @@ def main() -> None:
         raise IOError(f"Input config file does not exist: {args.config}")
     config = config_parser_init(args.config)
     credentials = Credentials(config['DEFAULT']['Username'], config['DEFAULT']['Password'],
-                              config['DEFAULT']['Url'], config['DEFAULT']['Port'])
+                              config['DEFAULT']['Url'])
 
     login_cookie = get_login_cookie(credentials.endpoint, credentials.username, credentials.password)
     delete_users(credentials.endpoint, login_cookie)

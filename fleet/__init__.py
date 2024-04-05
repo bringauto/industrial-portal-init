@@ -13,9 +13,12 @@ __all__ = (
     'Credentials',
     'UserAdder',
     'StopAdder',
+    'StopInfoGetter',
     'RouteAdder',
     'OrderAdder',
-    'Stop'
+    'Stop',
+    'PlatformAdder',
+    'PlatformInfoGetter'
 )
 
 from .query.utils import (
@@ -32,7 +35,10 @@ from .query.admin import AdminAdder
 from .query.car import CarAdder
 from .query.user import UserAdder
 from .query.stop import StopAdder
+from .query.stop import StopInfoGetter
 from .query.route import RouteAdder
 from .query.order import OrderAdder
 from .data.stop import Stop
 from .data.credentials import Credentials
+from .query.platform import PlatformAdder
+from .query.platform import PlatformInfoGetter

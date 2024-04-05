@@ -3,36 +3,38 @@ from typing import Any
 import requests
 from abc import ABC, abstractmethod
 
-from fleet.data.cookie import Cookie
-
 
 class Query(ABC):
     """Parent class for queries that add entities to portal."""
-    tenant_id = "-1"
 
-    def __init__(self, endpoint: str, login_cookie: Cookie) -> None:
+    def __init__(self, endpoint: str, apikey: str) -> None:
         self.endpoint = endpoint
-        self.login_cookie = login_cookie
+        self.apikey = apikey
 
-    def exec(self) -> Any:
-        if self.tenant_id == "-1":
-            headers = {
-                "Cookie": f"{self.login_cookie.key}={self.login_cookie.value}"}
-        else:
-            headers = {
-                "Cookie": f"{self.login_cookie.key}={self.login_cookie.value}",
-                "tenant": self.tenant_id}
-        response = self.call_query(self.get_query(), headers, self.endpoint)
+    def exec(self, method: str) -> Any:
+        response = self.call_query(self.get_query(), self.endpoint + "?api_key=" + self.apikey, method)
         if "errors" in response.json():
             raise Exception("Query problem: " + json.dumps(response.json()))
-        # Portal sometimes responds with error (if adding user with short password etc.)
         self.handle_json_response(response.json())
         return response.json()
 
     @staticmethod
-    def call_query(query: str, headers: dict, endpoint: str) -> requests.models.Response:
-        response = requests.post(
-            endpoint, json={"query": query}, headers=headers)
+    def call_query(query: str, endpoint: str, method: str) -> requests.models.Response:
+        print(f"Endpoint: {endpoint}")
+        print(f"Method: {method}")
+        print(f"Query: {query}")
+        json_query = None
+        response = None
+        if method == "GET":
+            response = requests.get(
+                endpoint, json=json_query)
+        elif method == "POST":
+            json_query = json.loads(query)
+            response = requests.post(
+                endpoint, json=json_query)
+        elif method == "DELETE":
+            response = requests.delete(
+                endpoint, json=json_query)
         if response.status_code == 200:
             return response
         else:

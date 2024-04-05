@@ -2,9 +2,8 @@
 
 class Credentials:
 
-    __slots__ = ('username', 'password', 'endpoint')
+    __slots__ = ('apikey', 'endpoint')
 
-    def __init__(self, username: str, password: str, url: str) -> None:
-        self.username = username
-        self.password = password
-        self.endpoint = f'{url}/graphql'
+    def __init__(self, apikey: str, url: str) -> None:
+        self.apikey = apikey
+        self.endpoint = f'{url}/v2/management'

@@ -1,98 +1,63 @@
 from string import Template
-from typing import Any
 
 from fleet.query.query import Query
 from fleet.query.route import RoutesInfoGetter
-from fleet.data.cookie import Cookie
 
 
 class CarAdder(Query):
-    def __init__(self, endpoint: str, login_cookie: Cookie, name: str, hw_id: str, companyName: str,
+    def __init__(self, endpoint: str, apikey: str, name: str, hw_id: int,
                  carAdminPhone: str, underTest: bool) -> None:
-        super().__init__(endpoint, login_cookie)
+        super().__init__(endpoint, apikey)
         self.name = name
         self.hw_id = hw_id
-        self.companyName = companyName
         self.adminPhone = carAdminPhone
         self.underTest = 'true' if underTest else 'false'
 
     def get_query(self) -> str:
         routes = RoutesInfoGetter(
-            self.endpoint, self.login_cookie).exec()
-        routeId = routes["data"]["RouteQuery"]["routes"]["nodes"][0]["id"]
-        return Template("""
-            mutation M{
-              CarMutation{
-              addCar(car : {name : "$name", hwId : "$hwId", companyName: "$companyName",
-                underTest: $underTest, carAdminPhone: "$adminPhone", routeId: $routeId
-               }){
-                id
-                name
-                token
-                companyName
-                carAdminPhone
-                routeId
-              }
-              }
-            }
-        """).safe_substitute({'name': self.name, 'hwId': self.hw_id, 'companyName': self.companyName,
-                              'underTest': self.underTest, 'adminPhone': self.adminPhone, 'routeId': routeId})
+            self.endpoint.removesuffix("/car") + "/route", self.apikey).exec("GET")
+        routeId = routes[0]["id"]
+        return Template("""{
+  "carAdminPhone": {
+    "phone": "$adminPhone"
+  },
+  "defaultRouteId": $routeId,
+  "name": "$name",
+  "platformHwId": $hwId,
+  "underTest": $underTest
+}""").safe_substitute({'name': self.name, 'hwId': self.hw_id,
+                       'underTest': self.underTest, 'adminPhone': self.adminPhone, 'routeId': routeId})
 
     def handle_json_response(self, json_response: dict) -> None:
-        # Car adding does not return any errors, always success even if car already exists
         pass
 
 
 class CarInfoGetter(Query):
     """Call parent exec() function and then pass result to function get_id_from_json() to get id"""
 
-    def __init__(self, endpoint: str, login_cookie: Cookie, car_name: str) -> None:
-        super().__init__(endpoint, login_cookie)
-        self.car_name = car_name
+    def __init__(self, endpoint: str, apikey: str) -> None:
+        super().__init__(endpoint, apikey)
 
     def get_query(self) -> str:
-        return Template("""
-            query Q{
-              CarQuery{
-                cars(where: {name: "$name"}){
-                  nodes{
-                    id
-                    name
-                  }
-                }
-              }
-        }
-        """).safe_substitute({'name': self.car_name})
+        return ""
 
     def handle_json_response(self, json_response: dict) -> None:
         pass
 
-    def get_id_from_json(self, json_response: dict) -> Any:
-        """Extracts id from json response"""
-        cars = json_response["data"]["CarQuery"]["cars"]["nodes"]
-        if len(cars) == 0:
-            raise Exception(f"Car with name {self.car_name} doesn't exists!")
-        if len(cars) > 1:
-            raise Exception(
-                f"There is more ({len(cars)}) cars with name {self.car_name}!")
-        return cars[0]["id"]
+    def get_all_ids_from_json(self, json_response: dict) -> list:
+        """Extracts ids from json response"""
+        ids = list()
+        for car in json_response:
+            ids.append(car["id"])
+        return ids
 
 
 class CarDeleter(Query):
-    def __init__(self, car_id: int, endpoint: str, login_cookie: Cookie) -> None:
-        super().__init__(endpoint, login_cookie)
-        self.car_id = car_id
+    def __init__(self, endpoint: str, apikey: str) -> None:
+        super().__init__(endpoint, apikey)
 
     def get_query(self) -> str:
-        return Template("""
-            mutation DeleteCar{
-              CarMutation{
-                deleteCar(carId: $carId){
-                  id
-                }
-              }
-            }
-        """).safe_substitute({'carId': self.car_id})
+        return ""
 
     def handle_json_response(self, json_response: dict) -> None:
         pass

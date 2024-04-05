@@ -13,25 +13,26 @@ class StopAdder(Query):
         self.contact_phone = contact_phone
 
     def get_query(self):
-        return Template("""{
-  "name": "$name",
-  "notificationPhone": {
-    "phone": "$contactPhone"
-  },
-  "position": {
-    "altitude": 0,
-    "latitude": $latitude,
-    "longitude": $longitude
-  }
-}""").safe_substitute({'name': self.name, 'latitude': self.latitude, 'longitude': self.longitude,
-                       'contactPhone': self.contact_phone})
+        return Template("""
+            {
+                "name": "$name",
+                "notificationPhone": {
+                    "phone": "$contactPhone"
+                },
+                "position": {
+                    "altitude": 0,
+                    "latitude": $latitude,
+                    "longitude": $longitude
+                }
+            }""").safe_substitute({'name': self.name, 'latitude': self.latitude, 'longitude': self.longitude,
+                                   'contactPhone': self.contact_phone})
 
     def handle_json_response(self, json_response: dict):
         pass
 
 
 class StopInfoGetter(Query):
-    """Call parent exec() function and then pass result to function get_id_from_json() to get id"""
+    """Call parent exec() function and then pass result to relevant member functions get ids"""
 
     def __init__(self, endpoint: str, apikey: str) -> None:
         super().__init__(endpoint, apikey)
@@ -51,7 +52,7 @@ class StopInfoGetter(Query):
                 f"Station with name {station_name} doesn't exist!")
     
     def get_all_ids_from_json(self, json_response: dict) -> list:
-        """Extracts ids from json response"""
+        """Extracts all ids from json response"""
         ids = list()
         for stop in json_response:
             ids.append(stop["id"])

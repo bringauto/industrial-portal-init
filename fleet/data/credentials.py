@@ -1,5 +1,3 @@
-
-
 class Credentials:
 
     __slots__ = ('apikey', 'endpoint')

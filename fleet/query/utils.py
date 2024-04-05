@@ -3,10 +3,10 @@ from os.path import isfile
 from configparser import ConfigParser
 
 from fleet.query.car import CarDeleter, CarInfoGetter
-from fleet.query.route import RouteDeleter, RoutesInfoGetter
-from fleet.query.stop import StopDeleter, StopInfoGetter
 from fleet.query.order import OrderDeleter, OrderInfoGetter
 from fleet.query.platform import PlatformDeleter, PlatformInfoGetter
+from fleet.query.route import RouteDeleter, RoutesInfoGetter
+from fleet.query.stop import StopDeleter, StopInfoGetter
 
 
 def delete_all(endpoint: str, apikey: str) -> None:

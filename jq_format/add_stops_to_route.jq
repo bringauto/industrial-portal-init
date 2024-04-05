@@ -1,1 +1,0 @@
-last(foreach range(.stations | length) as $i (.; .routes[]["stops"][$i]["stationName"] = .stations[$i]["name"]))

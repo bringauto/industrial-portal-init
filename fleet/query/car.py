@@ -17,23 +17,24 @@ class CarAdder(Query):
         routes = RoutesInfoGetter(
             self.endpoint.removesuffix("/car") + "/route", self.apikey).exec("GET")
         routeId = routes[0]["id"]
-        return Template("""{
-  "carAdminPhone": {
-    "phone": "$adminPhone"
-  },
-  "defaultRouteId": $routeId,
-  "name": "$name",
-  "platformHwId": $hwId,
-  "underTest": $underTest
-}""").safe_substitute({'name': self.name, 'hwId': self.hw_id,
-                       'underTest': self.underTest, 'adminPhone': self.adminPhone, 'routeId': routeId})
+        return Template("""
+            {
+                "carAdminPhone": {
+                    "phone": "$adminPhone"
+                },
+                "defaultRouteId": $routeId,
+                "name": "$name",
+                "platformHwId": $hwId,
+                "underTest": $underTest
+            }""").safe_substitute({'name': self.name, 'hwId': self.hw_id, 'underTest': self.underTest,
+                                   'adminPhone': self.adminPhone, 'routeId': routeId})
 
     def handle_json_response(self, json_response: dict) -> None:
         pass
 
 
 class CarInfoGetter(Query):
-    """Call parent exec() function and then pass result to function get_id_from_json() to get id"""
+    """Call parent exec() function and then pass result to relevant member functions get ids"""
 
     def __init__(self, endpoint: str, apikey: str) -> None:
         super().__init__(endpoint, apikey)
@@ -45,7 +46,7 @@ class CarInfoGetter(Query):
         pass
 
     def get_all_ids_from_json(self, json_response: dict) -> list:
-        """Extracts ids from json response"""
+        """Extracts all ids from json response"""
         ids = list()
         for car in json_response:
             ids.append(car["id"])

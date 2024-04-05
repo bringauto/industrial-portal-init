@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 
 class Query(ABC):
-    """Parent class for queries that add entities to portal."""
+    """Parent class for queries that manipulate with fleet managemetn entities."""
 
     def __init__(self, endpoint: str, apikey: str) -> None:
         self.endpoint = endpoint
@@ -42,11 +42,11 @@ class Query(ABC):
 
     @abstractmethod
     def get_query(self) -> str:
-        """This is implemented in each child class - creates query for each case (adding Car, User, ...)"""
+        """This is implemented in each child class - creates queries for each case (adding Car, Stop, ...)"""
         pass
 
     @abstractmethod
     def handle_json_response(self, json_response: dict) -> None:
-        """If user sends bad data in query to server, he will get error response, but responses differ, so has to be
-        implemented for different cases"""
+        """If user sends bad data in a query to server, he will get an error response, but responses differ,
+        so this has to be implemented for different cases"""
         pass

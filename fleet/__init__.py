@@ -6,11 +6,11 @@ __all__ = (
     'file_exists',
     'CarAdder',
     'Credentials',
-    'StopAdder',
-    'StopInfoGetter',
-    'RouteAdder',
     'PlatformAdder',
-    'PlatformInfoGetter'
+    'PlatformInfoGetter',
+    'RouteAdder',
+    'StopAdder',
+    'StopInfoGetter'
 )
 
 from .query.utils import (
@@ -20,9 +20,7 @@ from .query.utils import (
     file_exists
 )
 from .query.car import CarAdder
-from .query.stop import StopAdder
-from .query.stop import StopInfoGetter
+from .query.platform import PlatformAdder, PlatformInfoGetter
 from .query.route import RouteAdder
+from .query.stop import StopAdder, StopInfoGetter
 from .data.credentials import Credentials
-from .query.platform import PlatformAdder
-from .query.platform import PlatformInfoGetter

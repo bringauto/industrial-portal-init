@@ -5,8 +5,9 @@ import json
 import os
 
 from fleet import (CarAdder, Credentials, PlatformAdder, PlatformInfoGetter,
-                   RouteAdder, StopAdder, StopInfoGetter, argument_parser_init,
-                   config_parser_init, delete_all, file_exists)
+                   RouteAdder, RoutesInfoGetter, StopAdder, StopInfoGetter,
+                   VisualizationAdder, argument_parser_init, config_parser_init,
+                   delete_all, file_exists)
 
 
 def run_queries(credentials: Credentials, json_config_path: str) -> None:
@@ -20,22 +21,32 @@ def run_queries(credentials: Credentials, json_config_path: str) -> None:
     for route in json_config["routes"]:
         stops_js = route["stops"]
         stopIds = list()
+        visualizationStops = list()
         for stop_js in stops_js:
+            visualizationStops.append(stop_js)
             if stop_js["stationName"] == None:
                 continue
             stopInfoGetter = StopInfoGetter(credentials.endpoint + "/stop", credentials.apikey)
-            stopInfo = stopInfoGetter.exec("GET")
-            stopIds.append(stopInfoGetter.get_id_from_json(stopInfo, stop_js["stationName"]))
+            stopIds.append(stopInfoGetter.get_id_from_json(stopInfoGetter.exec("GET"), stop_js["stationName"]))
         RouteAdder(credentials.endpoint + "/route", credentials.apikey,
                    route["name"], stopIds).exec("POST")
+        routesInfo= RoutesInfoGetter(credentials.endpoint + "/route", credentials.apikey).exec("GET")
+        #for createdRoute in routesInfo:
+        #    if createdRoute["name"] == route["name"]:
+        #        VisualizationAdder(credentials.endpoint + "/route-visualization", credentials.apikey,
+        #                           route["color"], createdRoute["id"], visualizationStops).exec("POST")
 
+    already_added_cars = list()
     for car in json_config["cars"]:
+        if car["name"] in already_added_cars:
+            print(f"Car with name {car['name']} is already created; skipping")
+            continue
         PlatformAdder(credentials.endpoint + "/platformhw", credentials.apikey, car["name"]).exec("POST")
         platformInfoGetter = PlatformInfoGetter(credentials.endpoint + "/platformhw", credentials.apikey)
-        platformInfo = platformInfoGetter.exec("GET")
-        platformId = platformInfoGetter.get_id_from_json(platformInfo, car["name"])
+        platformId = platformInfoGetter.get_id_from_json(platformInfoGetter.exec("GET"), car["name"])
         CarAdder(credentials.endpoint + "/car", credentials.apikey, car["name"], platformId,
                  car["adminPhone"], car["underTest"]).exec("POST")
+        already_added_cars.append(car["name"])
 
 
 def main() -> None:

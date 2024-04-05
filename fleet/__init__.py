@@ -9,8 +9,10 @@ __all__ = (
     'PlatformAdder',
     'PlatformInfoGetter',
     'RouteAdder',
+    'RoutesInfoGetter',
     'StopAdder',
-    'StopInfoGetter'
+    'StopInfoGetter',
+    'VisualizationAdder'
 )
 
 from .query.utils import (
@@ -21,6 +23,7 @@ from .query.utils import (
 )
 from .query.car import CarAdder
 from .query.platform import PlatformAdder, PlatformInfoGetter
-from .query.route import RouteAdder
+from .query.route import RouteAdder, RoutesInfoGetter
 from .query.stop import StopAdder, StopInfoGetter
+from .query.visualization import VisualizationAdder
 from .data.credentials import Credentials

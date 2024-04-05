@@ -6,7 +6,7 @@ import os
 
 from fleet import (CarAdder, Credentials, PlatformAdder, PlatformInfoGetter,
                    RouteAdder, StopAdder, StopInfoGetter, argument_parser_init,
-                   config_parser_init, delete_all, file_exists,)
+                   config_parser_init, delete_all, file_exists)
 
 
 def run_queries(credentials: Credentials, json_config_path: str) -> None:

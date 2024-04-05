@@ -2,61 +2,11 @@ import argparse
 from os.path import isfile
 from configparser import ConfigParser
 
-from fleet.data.cookie import Cookie
 from fleet.query.car import CarDeleter, CarInfoGetter
-from fleet.query.query import Query
 from fleet.query.route import RouteDeleter, RoutesInfoGetter
 from fleet.query.stop import StopDeleter, StopInfoGetter
-from fleet.query.user import UserDeleter, UserInfoAboutMe
 from fleet.query.order import OrderDeleter, OrderInfoGetter
 from fleet.query.platform import PlatformDeleter, PlatformInfoGetter
-
-
-class AllIdGetter(Query):
-    def get_query(self) -> str:
-        return """
-                query QQ{
-                  CarQuery{
-                    cars{
-                      nodes{
-                        id
-                      }
-                    }
-                  }
-                  StopQuery{
-                    stops{
-                      nodes{
-                        id
-                      }
-                    }
-                  }
-                  OrderQuery{
-                    orders{
-                    nodes{
-                      id
-                    }
-                   }
-                  }
-                  RouteQuery{
-                        routes{
-                          nodes{
-                            id
-                          }
-                       }
-                    }
-                  UserQuery{
-                    users{
-                        nodes{
-                            userName
-                        }
-                    }
-                  }
-
-                }
-            """
-
-    def handle_json_response(self, json_response: dict) -> None:
-        pass
 
 
 def delete_all(endpoint: str, apikey: str) -> None:
@@ -85,41 +35,6 @@ def delete_all(endpoint: str, apikey: str) -> None:
     stop_ids = stop_info_getter.get_all_ids_from_json(stop_info)
     for stop_id in stop_ids:
         StopDeleter(endpoint + "/stop/" + str(stop_id), apikey).exec("DELETE")
-
-
-class UsersGetter(Query):
-    def get_query(self) -> str:
-        return """
-            query{
-                UserQuery{
-                    users{
-                        nodes{
-                            userName
-                            roles
-                        }
-                    }
-                }
-            }
-            """
-
-    def handle_json_response(self, json_response: dict) -> None:
-        pass
-
-
-def delete_users(endpoint: str, login_cookie: Cookie) -> None:
-    users_ids = UsersGetter(endpoint, login_cookie).exec()
-    for user_node in users_ids["data"]["UserQuery"]["users"]["nodes"]:
-        if user_node["userName"] != "Admin":
-            UserDeleter(endpoint, login_cookie, user_node["userName"]).exec()
-
-
-def set_tenant(endpoint: str, cookie: Cookie) -> None:
-    user_info = UserInfoAboutMe(endpoint, cookie).exec()
-    Query.tenant_id = str(user_info["data"]["UserQuery"]["me"]["tenants"]["nodes"][0]["id"])
-
-
-def reset_tenant() -> None:
-    Query.tenant_id = "-1"
 
 
 def argument_parser_init() -> argparse.Namespace:

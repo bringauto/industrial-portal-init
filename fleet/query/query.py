@@ -20,7 +20,7 @@ class Query(ABC):
 
     @staticmethod
     def call_query(query: str, endpoint: str, method: str) -> requests.models.Response:
-        print(f"Endpoint: {endpoint}")
+        print(f"\nEndpoint: {endpoint}")
         print(f"Method: {method}")
         print(f"Query: {query}")
         json_query = None

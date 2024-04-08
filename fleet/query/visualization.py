@@ -16,7 +16,7 @@ class VisualizationAdder(Query):
                 "hexcolor": "$color",
                 "routeId": $routeId,
                 "points': $points
-            }""").safe_substitute({'color': self.color, 'routeId': self.routeId, 'points': self.points})
+            }""").safe_substitute({'color': self.color, 'routeId': self.routeId, 'points': self.points}).replace("'", '"')
 
     def handle_json_response(self, json_response: dict) -> None:
         pass

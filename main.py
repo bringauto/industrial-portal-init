@@ -10,7 +10,7 @@ from fleet import (CarAdder, Credentials, PlatformAdder, PlatformInfoGetter,
                    delete_all, file_exists)
 
 
-def run_queries(credentials: Credentials, json_config_path: str) -> None:
+def run_queries(credentials: Credentials, json_config_path: str, already_added_cars: list) -> None:
     with open(json_config_path, "r", encoding='utf-8') as json_file:
         json_config = json.load(json_file)
 
@@ -23,7 +23,9 @@ def run_queries(credentials: Credentials, json_config_path: str) -> None:
         stopIds = list()
         visualizationStops = list()
         for stop_js in stops_js:
-            visualizationStops.append(stop_js)
+            visualization_stop = stop_js.copy()
+            visualization_stop.pop("stationName")
+            visualizationStops.append(visualization_stop)
             if stop_js["stationName"] == None:
                 continue
             stopInfoGetter = StopInfoGetter(credentials.endpoint + "/stop", credentials.apikey)
@@ -31,15 +33,15 @@ def run_queries(credentials: Credentials, json_config_path: str) -> None:
         RouteAdder(credentials.endpoint + "/route", credentials.apikey,
                    route["name"], stopIds).exec("POST")
         routesInfo= RoutesInfoGetter(credentials.endpoint + "/route", credentials.apikey).exec("GET")
-        #for createdRoute in routesInfo:
-        #    if createdRoute["name"] == route["name"]:
-        #        VisualizationAdder(credentials.endpoint + "/route-visualization", credentials.apikey,
-        #                           route["color"], createdRoute["id"], visualizationStops).exec("POST")
+        for createdRoute in routesInfo:
+            if createdRoute["name"] == route["name"]:
+                VisualizationAdder(credentials.endpoint + "/route-visualization", credentials.apikey,
+                                   route["color"], createdRoute["id"], visualizationStops).exec("POST")
 
-    already_added_cars = list()
+    
     for car in json_config["cars"]:
         if car["name"] in already_added_cars:
-            print(f"Car with name {car['name']} is already created; skipping")
+            print(f"\nCar with name {car['name']} is already created; skipping")
             continue
         PlatformAdder(credentials.endpoint + "/platformhw", credentials.apikey, car["name"]).exec("POST")
         platformInfoGetter = PlatformInfoGetter(credentials.endpoint + "/platformhw", credentials.apikey)
@@ -58,9 +60,10 @@ def main() -> None:
 
     args.directory = os.path.join(args.directory, '')
     delete_all(credentials.endpoint, credentials.apikey)
+    already_added_cars = list()
     for map_file in glob.iglob(f'{args.directory}*'):
         try:
-            run_queries(credentials, map_file)
+            run_queries(credentials, map_file, already_added_cars)
         except Exception as exception:
             print(exception)
             return

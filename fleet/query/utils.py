@@ -14,7 +14,7 @@ def delete_all(endpoint: str, apikey: str) -> None:
     order_info = order_info_getter.exec("GET")
     order_ids = order_info_getter.get_all_ids_from_json(order_info)
     for order_id in order_ids:
-        OrderDeleter(endpoint + "/order/" + str(order_id), apikey).exec("DELETE")
+        OrderDeleter(endpoint + "/order/" + str(order_id[0]) + "/" + str(order_id[1]), apikey).exec("DELETE")
     car_info_getter = CarInfoGetter(endpoint + "/car", apikey)
     car_info = car_info_getter.exec("GET")
     car_ids = car_info_getter.get_all_ids_from_json(car_info)

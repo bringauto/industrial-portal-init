@@ -17,7 +17,8 @@ class OrderInfoGetter(Query):
         """Extracts all ids from json response"""
         ids = list()
         for order in json_response:
-            ids.append(order["id"])
+            id_tuple = (order["carId"], order["id"])
+            ids.append(id_tuple)
         return ids
 
 class OrderDeleter(Query):

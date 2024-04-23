@@ -7,7 +7,7 @@ Script for initialization of the [BringAuto Fleet Management] database
 
 - The [BringAuto Fleet Management] must be deployed and work
 
-!!! **this script will delete all entries in the database!** !!!
+!!! **this script will delete all entries in the database** !!!
 
 If you do not want to delete the database content, comment out the `delete_all` function call
 

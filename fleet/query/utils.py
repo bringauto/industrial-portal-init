@@ -2,39 +2,41 @@ import argparse
 from os.path import isfile
 from configparser import ConfigParser
 
-from fleet.query.car import CarDeleter, CarInfoGetter
-from fleet.query.order import OrderDeleter, OrderInfoGetter
-from fleet.query.platform import PlatformDeleter, PlatformInfoGetter
-from fleet.query.route import RouteDeleter, RoutesInfoGetter
-from fleet.query.stop import StopDeleter, StopInfoGetter
+from fleet_management_http_client_python import (
+    ApiClient, OrderApi, CarApi, PlatformHWApi, RouteApi, StopApi
+)
 
 
-def delete_all(endpoint: str, apikey: str) -> None:
-    order_info_getter = OrderInfoGetter(endpoint + "/order", apikey)
-    order_info = order_info_getter.exec("GET")
-    order_ids = order_info_getter.get_all_ids_from_json(order_info)
-    for order_id in order_ids:
-        OrderDeleter(endpoint + "/order/" + str(order_id[0]) + "/" + str(order_id[1]), apikey).exec("DELETE")
-    car_info_getter = CarInfoGetter(endpoint + "/car", apikey)
-    car_info = car_info_getter.exec("GET")
-    car_ids = car_info_getter.get_all_ids_from_json(car_info)
-    for car_id in car_ids:
-        CarDeleter(endpoint + "/car/" + str(car_id), apikey).exec("DELETE")
-    platform_info_getter = PlatformInfoGetter(endpoint + "/platformhw", apikey)
-    platform_info = platform_info_getter.exec("GET")
-    platform_ids = platform_info_getter.get_all_ids_from_json(platform_info)
-    for platform_id in platform_ids:
-        PlatformDeleter(endpoint + "/platformhw/" + str(platform_id), apikey).exec("DELETE")
-    route_info_getter = RoutesInfoGetter(endpoint + "/route", apikey)
-    route_info = route_info_getter.exec("GET")
-    route_ids = route_info_getter.get_all_ids_from_json(route_info)
-    for route_id in route_ids:
-        RouteDeleter(endpoint + "/route/" + str(route_id), apikey).exec("DELETE")
-    stop_info_getter = StopInfoGetter(endpoint + "/stop", apikey)
-    stop_info = stop_info_getter.exec("GET")
-    stop_ids = stop_info_getter.get_all_ids_from_json(stop_info)
-    for stop_id in stop_ids:
-        StopDeleter(endpoint + "/stop/" + str(stop_id), apikey).exec("DELETE")
+def delete_all(api_client: ApiClient) -> None:
+    order_api = OrderApi(api_client)
+    orders = order_api.get_orders()
+    for order in orders:
+        print(f"Deleting order {order.id}")
+        order_api.delete_order(car_id=order.car_id, order_id=order.id)
+
+    car_api = CarApi(api_client)
+    cars = car_api.get_cars()
+    for car in cars:
+        print(f"Deleting car {car.id}, name: {car.name}")
+        car_api.delete_car(car_id=car.id)
+
+    platform_api = PlatformHWApi(api_client)
+    platforms = platform_api.get_hws()
+    for platform in platforms:
+        print(f"Deleting platform {platform.id}, name: {platform.name}")
+        platform_api.delete_hw(platform_hw_id=platform.id)
+    
+    route_api = RouteApi(api_client)
+    routes = route_api.get_routes()
+    for route in routes:
+        print(f"Deleting route {route.id}, name: {route.name}")
+        route_api.delete_route(route_id=route.id)
+
+    stop_api = StopApi(api_client)
+    stops = stop_api.get_stops()
+    for stop in stops:
+        print(f"Deleting stop {stop.id}, name: {stop.name}")
+        stop_api.delete_stop(stop_id=stop.id)
 
 
 def argument_parser_init() -> argparse.Namespace:

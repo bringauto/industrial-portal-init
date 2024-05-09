@@ -1,1 +1,0 @@
-.routes[].stops[]["stationName"] = nul

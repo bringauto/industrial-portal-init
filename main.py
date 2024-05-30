@@ -75,7 +75,6 @@ def run_queries(api_client: ApiClient, json_config_path: str, already_added_cars
             continue
         print(f"New platform hw, name: {car['name']}")
         new_platforms.append(PlatformHW(name=car["name"]))
-        already_added_cars.append(car["name"])
     if len(new_platforms) > 0:
         print("Sending create platforms request")
         created_platforms = platform_api.create_hws(new_platforms)
@@ -93,6 +92,7 @@ def run_queries(api_client: ApiClient, json_config_path: str, already_added_cars
                     carAdminPhone=MobilePhone(phone=car["adminPhone"]),
                     underTest=car["underTest"]
                 ))
+                already_added_cars.append(car["name"])
     if len(new_cars) > 0:
         print("Sending create cars request")
         car_api.create_cars(new_cars)

@@ -21,7 +21,8 @@ def run_queries(api_client: ApiClient, json_config_path: str, already_added_cars
         new_stops.append(Stop(
             name=stop["name"],
             position=GNSSPosition(latitude=stop["latitude"], longitude=stop["longitude"]),
-            notificationPhone=MobilePhone(phone=stop["contactPhone"])
+            notificationPhone=MobilePhone(phone=stop["contactPhone"]),
+            isAutoStop=stop['isAutoStop'] if 'isAutoStop' in stop else False
         ))
     print("Sending create stops request")
     created_stops = stop_api.create_stops(new_stops)

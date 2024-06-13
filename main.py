@@ -15,23 +15,27 @@ def run_queries(api_client: ApiClient, json_config_path: str, already_added_cars
         json_config = json.load(json_file)
 
     stop_api = StopApi(api_client)
-    created_stops = list()
+    new_stops = list()
     for stop in json_config["stops"]:
-        print(f"Creating stop, name: {stop['name']}")
-        created_stops.append(stop_api.create_stop(Stop(
+        print(f"New stop, name: {stop['name']}")
+        new_stops.append(Stop(
             name=stop["name"],
             position=GNSSPosition(latitude=stop["latitude"], longitude=stop["longitude"]),
             notificationPhone=MobilePhone(phone=stop["contactPhone"])
-        )))
+        ))
+    print("Sending create stops request")
+    created_stops = stop_api.create_stops(new_stops)
 
     route_api = RouteApi(api_client)
-    created_routes = list()
+    new_routes = list()
+    new_visualizations = list()
+    visualization_stops = dict()
     for route in json_config["routes"]:
         stops = route["stops"]
         stop_ids = list()
-        visualization_stops = list()
+        visualization_stops[route['name']] = list()
         for stop in stops:
-            visualization_stops.append(GNSSPosition(
+            visualization_stops[route['name']].append(GNSSPosition(
                 latitude=stop["latitude"],
                 longitude=stop["longitude"]
             ))
@@ -40,36 +44,58 @@ def run_queries(api_client: ApiClient, json_config_path: str, already_added_cars
             for created_stop in created_stops:
                 if created_stop.name == stop["stationName"]:
                     stop_ids.append(created_stop.id)
-        print(f"Creating route, name: {route['name']}")
-        created_routes.append(route_api.create_route(Route(
+        print(f"New route, name: {route['name']}")
+        new_routes.append(Route(
             name=route["name"],
             stopIds=stop_ids
-        )))
-        for created_route in created_routes:
-            if created_route.name == route["name"]:
-                print(f"Setting route visualization for route {created_route.id}")
-                route_api.redefine_route_visualization(RouteVisualization(
-                    routeId=created_route.id,
+        ))
+    print("Sending create routes request")
+    created_routes = route_api.create_routes(new_routes)
+
+    for route in json_config["routes"]:
+        for new_route in created_routes:
+            if new_route.name == route["name"]:
+                print(f"New route visualization for route {new_route.name}")
+                new_visualizations.append(RouteVisualization(
+                    routeId=new_route.id,
                     hexcolor=route["color"],
-                    points=visualization_stops
+                    points=visualization_stops[route['name']]
                 ))
+                break
+    print("Sending redefine route visualizations request")
+    route_api.redefine_route_visualizations(new_visualizations)
     
     platform_api = PlatformHWApi(api_client)
     car_api = CarApi(api_client)
+    new_platforms = list()
+    new_cars = list()
     for car in json_config["cars"]:
         if car["name"] in already_added_cars:
-            print(f"Car with name {car['name']} is already created; skipping\n")
+            print(f"Platform with name {car['name']} is already created; skipping")
             continue
-        print(f"Creating platform hw, name: {car['name']}")
-        new_platform = platform_api.create_hw(PlatformHW(name=car["name"]))
-        print(f"Creating car, name: {car['name']}\n")
-        car_api.create_car(Car(
-            platformHwId=new_platform.id,
-            name=car["name"],
-            carAdminPhone=MobilePhone(phone=car["adminPhone"]),
-            underTest=car["underTest"]
-        ))
-        already_added_cars.append(car["name"])
+        print(f"New platform hw, name: {car['name']}")
+        new_platforms.append(PlatformHW(name=car["name"]))
+    if len(new_platforms) > 0:
+        print("Sending create platforms request")
+        created_platforms = platform_api.create_hws(new_platforms)
+    
+    for car in json_config["cars"]:
+        if car["name"] in already_added_cars:
+            print(f"Car with name {car['name']} is already created; skipping")
+            continue
+        for new_platform in created_platforms:
+            if new_platform.name == car["name"]:
+                print(f"Creating car, name: {car['name']}")
+                new_cars.append(Car(
+                    platformHwId=new_platform.id,
+                    name=car["name"],
+                    carAdminPhone=MobilePhone(phone=car["adminPhone"]),
+                    underTest=car["underTest"]
+                ))
+                already_added_cars.append(car["name"])
+    if len(new_cars) > 0:
+        print("Sending create cars request")
+        car_api.create_cars(new_cars)
 
 
 def main() -> None:
@@ -84,16 +110,16 @@ def main() -> None:
 
     args.directory = os.path.join(args.directory, '')
     delete_all(api_client)
-    print('Fleet management deleted\n')
+    print('Fleet management deleted')
     already_added_cars = list()
     for map_file in glob.iglob(f'{args.directory}*'):
-        print(f"Processing file: {map_file}")
+        print(f"\nProcessing file: {map_file}")
         try:
             run_queries(api_client, map_file, already_added_cars)
         except Exception as exception:
             print(exception)
             return
-    print('Fleet management updated')
+    print('\nFleet management updated')
 
 
 if __name__ == '__main__':

@@ -7,13 +7,10 @@ Script for initialization of the [BringAuto Fleet Management] database
 
 - The [BringAuto Fleet Management] must be deployed and work
 
-!!! **this script will delete all entries in the database** !!!
-
-If you do not want to delete the database content, comment out the `delete_all` function call
-
 ## Arguments
 * -c or --config=```<file>``` - config file (default: config/config.ini)
-* -d or --directory=```<directory>``` - directory with input files (default: maps/)
+* -m or --maps=```<directory>``` - directory with input files (default: maps/)
+* -d or --delete - delete every entity in the database beforehand
 
 ## Config file
 Example:
@@ -35,7 +32,7 @@ pip3 install -r requirements.txt
 
 Example run:
 ```
-python3 main.py -c config/config.ini -d maps
+python3 main.py -c config/config.ini -m maps -d
 ```
 
 [BringAuto Fleet Management]: https://github.com/bringauto/fleet-management-http-api

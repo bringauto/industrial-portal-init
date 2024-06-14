@@ -70,6 +70,9 @@ def run_queries(api_client: ApiClient, json_config_path: str, already_added_cars
     car_api = CarApi(api_client)
     new_platforms = list()
     new_cars = list()
+    for platform in platform_api.get_hws():
+        if platform.name not in already_added_cars:
+            already_added_cars.append(platform.name)
     for car in json_config["cars"]:
         if car["name"] in already_added_cars:
             print(f"Platform with name {car['name']} is already created; skipping")
@@ -109,11 +112,12 @@ def main() -> None:
         api_key={'APIKeyAuth': config['DEFAULT']['ApiKey']}
     ))
 
-    args.directory = os.path.join(args.directory, '')
-    delete_all(api_client)
-    print('Fleet management deleted')
+    args.maps = os.path.join(args.maps, '')
+    if args.delete:
+        delete_all(api_client)
+        print('Fleet management deleted')
     already_added_cars = list()
-    for map_file in glob.iglob(f'{args.directory}*'):
+    for map_file in glob.iglob(f'{args.maps}*'):
         print(f"\nProcessing file: {map_file}")
         try:
             run_queries(api_client, map_file, already_added_cars)

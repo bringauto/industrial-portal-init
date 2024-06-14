@@ -50,8 +50,10 @@ def argument_parser_init() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str,
                         help='Config file, default is config/config.ini', default='config/config.ini')
-    parser.add_argument('-d', '--directory', type=str,
+    parser.add_argument('-m', '--maps', type=str,
                         help='Directory with input files, default is maps/', default='maps/')
+    parser.add_argument('-d', '--delete', action='store_true',
+                        help='Delete all entities from database')
     return parser.parse_args()
 
 

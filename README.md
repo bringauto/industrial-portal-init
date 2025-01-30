@@ -21,7 +21,7 @@ Example:
 ```
 ApiKey = <ApiKey>
 Url = localhost
-Tenant = tenant=<TenantName>
+Tenant = <TenantName>
 ```
 
 ### Sections
